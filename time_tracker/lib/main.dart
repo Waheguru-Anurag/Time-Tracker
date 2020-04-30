@@ -1,7 +1,9 @@
-    import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
   import 'package:flutter/widgets.dart';
   import 'package:table_calendar/table_calendar.dart';
   import 'package:timetracker/Event.dart';
+  import 'package:timetracker/CustomListView.dart';
+  import 'package:timetracker/Input.dart';
 
   void main() => runApp(MaterialApp(
     home: MyHomePage(),
@@ -13,22 +15,13 @@
   }
 
   class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin{
-    AnimationController _animationController;
     CalendarController _calendarController;
     List _selectedevents;
     Map<DateTime,List> _events;
     DateTime _presentDay,_selectedDay;
-    AnimatedIconData icon = AnimatedIcons.play_pause;
-    bool isPlaying = false;
-    BuildContext buildcontext;
 
     @override
     void initState() {
-      super.initState();
-      _animationController =  AnimationController(
-        vsync: this,
-        duration: Duration(seconds: 1),
-      );
       _calendarController = CalendarController();
       _presentDay = DateTime.now();
       if(_events==null) {
@@ -124,7 +117,6 @@
 
     @override
     Widget build(BuildContext context) {
-      buildcontext = context;
       return Scaffold(
         appBar: AppBar(
           title: Text("Time Tracker"),
@@ -150,7 +142,9 @@
               ),
               // Expanded is used for resizing
               Flexible(
-                child: _buildEventList(),
+                child: CustomListView(
+                  selectedevents: _selectedevents,
+                ),
               )
             ],
           ),
@@ -205,112 +199,4 @@
       return false;
     }
 
-    Widget _buildEventList() {
-      return Container(
-        color: Colors.black12,
-            child: ListView.builder(
-              addAutomaticKeepAlives: true,
-              shrinkWrap: true,
-              itemCount: _selectedevents.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return Dismissible(
-                    key: UniqueKey(),
-                    // Provide a function that tells the app
-                    // what to do after an item has been swiped away.
-                    onDismissed: (direction) {
-                      // Remove the item from the data source.
-                      setState(() {
-                        _selectedevents.removeAt(index);
-                      });
-                    },
-                      child: Container(
-                        decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Colors.white,
-                      ),
-                        margin: EdgeInsets.all(2.0),
-                          child: Padding(
-                            padding: EdgeInsets.all(12.0),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                              GestureDetector(
-                                onTap: (){
-                                  if(isPlaying)
-                                    icon = AnimatedIcons.play_pause;
-                                  else
-                                    icon = AnimatedIcons.pause_play;
-                                  setState(() {
-                                        isPlaying=!isPlaying;
-                                    });
-                                  },
-                                  child: AnimatedIcon(
-                                    icon: icon,
-                                    progress: _animationController,
-                                  )
-                                ),
-                                Text(_selectedevents[index].name,
-                                    style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Text("${_selectedevents[index].getDuration()}",
-                                  style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.blue,
-                                  ),
-                                ),
-                                Material(
-                                  color: Colors.white,
-                                  child: IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () {
-                                        setState(() {
-                                          _selectedevents.removeAt(index);
-                                          _events[_selectedDay] = _selectedevents;
-                                        });
-                                        },
-                                      highlightColor: Colors.cyanAccent,
-                                    ),
-                              ),
-                            ],
-                          ),
-                      ),
-                  ),
-                  );
-                  }
-                )
-        );
-      }
-
-
   }
-
-  class Input extends StatelessWidget{
-    final String hintText;
-    final TextEditingController controller;
-    final Color cursorColor;
-    IconData icon;
-    TextAlign textAlign;
-    TextInputType textInputType;
-
-    Input({Key key, this.hintText, this.controller, this.cursorColor, this.icon, this.textAlign,this.textInputType}) : super(key: key);
-
-    @override
-    Widget build(BuildContext buildContext){
-      return TextField(
-        textAlign: textAlign==null?TextAlign.start:textAlign,
-        keyboardType: textInputType,
-        decoration: InputDecoration(
-            hintText: hintText,
-            icon: Icon(icon)
-        ),
-        cursorColor: cursorColor,
-        controller: controller,
-      );
-    }
-  }
-
