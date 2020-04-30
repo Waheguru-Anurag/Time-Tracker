@@ -1,4 +1,4 @@
-  import 'package:flutter/material.dart';
+    import 'package:flutter/material.dart';
   import 'package:flutter/widgets.dart';
   import 'package:table_calendar/table_calendar.dart';
   import 'package:timetracker/Event.dart';
@@ -62,6 +62,7 @@
                           icon: Icons.event,
                           controller: Task,
                           cursorColor: Colors.blue,
+                          textInputType: TextInputType.text,
                         )
                       ),
                     ],
@@ -75,6 +76,7 @@
                           controller: Hour,
                           cursorColor: Colors.blue,
                           textAlign: TextAlign.center,
+                          textInputType: TextInputType.number,
                         ),
                       ),
                       Expanded(
@@ -83,6 +85,7 @@
                           controller: Minute,
                           cursorColor: Colors.blue,
                           textAlign: TextAlign.center,
+                          textInputType: TextInputType.number,
                         )
                       ),
                       Expanded(
@@ -91,6 +94,7 @@
                           controller: Second,
                           cursorColor: Colors.blue,
                           textAlign: TextAlign.center,
+                          textInputType: TextInputType.number,
                         ),
                       ),
                     ],
@@ -291,13 +295,15 @@
     final Color cursorColor;
     IconData icon;
     TextAlign textAlign;
+    TextInputType textInputType;
 
-    Input({Key key, this.hintText, this.controller, this.cursorColor, this.icon, this.textAlign}) : super(key: key);
+    Input({Key key, this.hintText, this.controller, this.cursorColor, this.icon, this.textAlign,this.textInputType}) : super(key: key);
 
     @override
     Widget build(BuildContext buildContext){
       return TextField(
         textAlign: textAlign==null?TextAlign.start:textAlign,
+        keyboardType: textInputType,
         decoration: InputDecoration(
             hintText: hintText,
             icon: Icon(icon)
@@ -306,5 +312,5 @@
         controller: controller,
       );
     }
- }
+  }
 
