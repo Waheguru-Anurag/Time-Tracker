@@ -1,4 +1,0 @@
-#Fri May 01 12:49:02 IST 2020
-base.0=/home/anurag/Desktop/Time-Tracker/time_tracker/build/app/intermediates/dex/debug/out/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
