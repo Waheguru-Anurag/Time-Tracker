@@ -3,9 +3,18 @@ import 'package:flutter/widgets.dart';
 
 class CustomListView extends StatefulWidget{
   List selectedevents;
+  _CustomListViewState _customListViewState;
   CustomListView({Key key, this.selectedevents}) : super(key: key);
   @override
-  _CustomListViewState createState() => _CustomListViewState();
+  _CustomListViewState createState() {
+      _customListViewState=_CustomListViewState();
+      return _customListViewState;
+  }
+
+  void ChangeList(List events){
+    selectedevents=events;
+    _customListViewState.ChangeState(events);
+  }
 }
 
 class _CustomListViewState extends State<CustomListView> with SingleTickerProviderStateMixin{
@@ -101,5 +110,11 @@ class _CustomListViewState extends State<CustomListView> with SingleTickerProvid
             }
         )
     );
+  }
+
+  void ChangeState(List events){
+    setState(() {
+      widget.selectedevents = events;
+    });
   }
 }
