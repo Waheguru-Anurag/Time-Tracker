@@ -1,4 +1,4 @@
-  import 'package:flutter/material.dart';
+    import 'package:flutter/material.dart';
   import 'package:flutter/widgets.dart';
   import 'package:table_calendar/table_calendar.dart';
   import 'package:timetracker/Event.dart';
@@ -19,6 +19,7 @@
     List _selectedevents;
     Map<DateTime,List> _events;
     DateTime _presentDay,_selectedDay;
+    CustomListView customListView;
 
     @override
     void initState() {
@@ -31,6 +32,7 @@
         };
       }
       _selectedevents = _events[_presentDay] ?? [];
+      customListView = CustomListView(selectedevents: _selectedevents,);
     }
 
     Future<EventWidget> createAlertDialog(BuildContext context){
@@ -142,14 +144,12 @@
               ),
               // Expanded is used for resizing
               Flexible(
-                child: CustomListView(
-                  selectedevents: _selectedevents,
-                ),
+                child: customListView
               )
             ],
           ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
               createAlertDialog(context).then((onValue) {
                 if (onValue != null) {
                   _selectedDay = _SelectedDay();
@@ -177,9 +177,7 @@
 
     void _onDaySelected(DateTime day, List events) {
       print('CALLBACK: _onDaySelected');
-      setState(() {
-          _selectedevents=events;
-      });
+          customListView.ChangeList(events);
     }
 
     bool compare(DateTime dateTime1, DateTime dateTime2){
@@ -198,5 +196,5 @@
 
       return false;
     }
-    
+
   }
